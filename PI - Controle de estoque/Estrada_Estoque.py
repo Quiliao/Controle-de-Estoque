@@ -122,6 +122,14 @@ def Adicionar_Produtos():
     return sg.Window("Adicionar produtos", layout=layout, finalize=True)
 
 
+def clear_input():
+    for key in values:
+        window[key].update(" ")
+    return None
+
+
+usuariosLogin = ["Davi", "Carlos", "Othavio"]
+
 janela1, janela2, janela3 = janela_login(), None, None
 
 while True:
@@ -129,7 +137,7 @@ while True:
     if window == janela1 and event == sg.WIN_CLOSED:
         break
     if window == janela1 and event == "Continuar":
-        if values["usuario"] == "admin":
+        if values["usuario"] in usuariosLogin:
             janela1.hide()
             janela2 = janela_principal()
         else:
@@ -137,9 +145,7 @@ while True:
     if window == janela2 and event == sg.WIN_CLOSED:
         break
 
-    if (
-        window == janela2 and event == "Adicionar produto"
-    ):  # Vai para a aba Adicionar produto
+    if window == janela2 and event == "Adicionar":  # Vai para a aba Adicionar produto
         janela2.hide()
         janela3 = Adicionar_Produtos()
         if (
@@ -154,4 +160,4 @@ while True:
             sg.popup("Item adicionado com sucesso!")
             clear_input()
 
-window.close()
+janela_principal.close()
