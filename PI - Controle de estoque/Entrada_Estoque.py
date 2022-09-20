@@ -1,5 +1,6 @@
 from tkinter import Button, font
 from tkinter.font import BOLD
+from turtle import hideturtle
 import PySimpleGUI as sg
 from numpy import flexible
 import pandas as pd
@@ -57,14 +58,53 @@ def janela_principal():
         [sg.Text("Bem vindo ao sistema de estoque", font=("Arial", 20))],
         [sg.Text("Escolha uma opção abaixo:", font=("Arial", 15))],
         [
-            sg.Button("Adicionar produto", size=(15, 1), key="-BOTAOADICIONAR-"),
-            sg.Button("Remover produto", size=(15, 1), key="-BOTAOREMOVER-"),
+            sg.Push(),
+            sg.Button(
+                "Adicionar produto",
+                size=(20, 1),
+                key="-BOTAOADICIONAR-",
+                font=("Roboto", 10, BOLD),
+            ),
+            sg.Button(
+                "Remover produto",
+                size=(20, 1),
+                key="-BOTAOREMOVER-",
+                font=("Roboto", 10, BOLD),
+            ),
+            sg.Push(),
         ],
         [
-            sg.Button("Visualizar estoque", size=(20, 1), key="-BOTAOVISUALIZAR-"),
-            sg.Button("Verificar vencimentos", size=(20, 1), key="-BOTAOVERIFICAR-"),
+            sg.Push(),
+            sg.Button(
+                "Visualizar estoque",
+                size=(20, 1),
+                key="-BOTAOVISUALIZAR-",
+                font=("Roboto", 10, BOLD),
+            ),
+            sg.Button(
+                "Verificar vencimentos",
+                size=(20, 1),
+                key="-BOTAOVERIFICAR-",
+                font=("Roboto", 10, BOLD),
+            ),
+            sg.Push(),
         ],
-        [sg.Button("Voltar", size=(10, 1)), sg.Button("Sair", size=(10, 1))],
+        [
+            sg.Push(),
+            sg.Button(
+                "Voltar",
+                size=(10, 1),
+                button_color=("white", "darkblue"),
+                font=("Roboto", 10, BOLD),
+            ),
+            sg.Button(
+                "Sair",
+                size=(10, 1),
+                button_color=("white", "darkblue"),
+                font=("Roboto", 10, BOLD),
+            ),
+            sg.Push(),
+        ],
     ]
     return sg.Window(
         "Estoque", layout=layout, element_justification="center", finalize=True
@@ -138,13 +178,13 @@ def clear_input():
     return None
 
 
-usuariosLogin = ["1", "Davi", "Carlos", "Othavio"]
+usuariosLogin = ["1", "Davi", "Carlos", "Othavio", "lucas"]
 
 janela1, janela2, janela3 = janela_login(), None, None
 
 while True:
     window, event, values = sg.read_all_windows()
-
+    # -------------------------------LOGIN------------------------------
     if window == janela1 and event == sg.WIN_CLOSED or event == "Sair":
         break
     if window == janela1 and event == "-BOTAOCONTINUAR-":
@@ -153,19 +193,21 @@ while True:
             janela2 = janela_principal()
         else:
             sg.popup("Usuario invalido")
-    # Aqui abriu a janela principal com os menus
+    # ------------------------------- JANAL PRINCIPAL --------------------------------
     if window == janela2 and event == sg.WIN_CLOSED or event == "Sair":
         break
 
-    # No menu da janela principal, se clicar em adicionar produto, abre a janela de adicionar produtos
+    if window == janela2 and event == "Voltar":
+        janela2.hide()
+        janela1 = janela_login()
+
+    # ------------------------------- ADICIONAR PRODUTOS --------------------------------
     if window == janela2 and event == "-BOTAOADICIONAR-":
         janela2.hide()
         janela3 = Adicionar_Produtos()
     if window == janela3 and event == sg.WIN_CLOSED or event == "Sair":
         break
-    if (
-        event == janela3 and event == "-LIMPAR-"
-    ):  # Se clicar em limpar, limpa os campos da janela de adicionar produtos
+    if event == janela3 and event == "-LIMPAR-":
         clear_input()
     if (
         event == janela3 and event == "-BOTAOADICIONARPRODUTO-"
@@ -175,4 +217,4 @@ while True:
         sg.popup("Item adicionado com sucesso!")
         clear_input()
 
-janela_principal.close()
+window.close()
