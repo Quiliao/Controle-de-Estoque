@@ -167,7 +167,7 @@ def Adicionar_Produtos():
             sg.Text("Nome do produto:", size=(14, 1), font=("Roboto", 12)),
             sg.InputText(size=(25, 1), key="-PRODUTO-", font=("Roboto", 12)),
             sg.Push(),
-            sg.Text("Preco: ", size=(5, 1), font=("Roboto", 12)),
+            sg.Text("Preço: ", size=(5, 1), font=("Roboto", 12)),
             sg.InputText(size=(11, 1), key="-PRECO-", font=("Roboto", 12)),
         ],
         [sg.VPush()],
