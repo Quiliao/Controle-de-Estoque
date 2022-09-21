@@ -195,6 +195,7 @@ def Adicionar_Produtos():
     return sg.Window("Adicionar produtos", layout=layout, finalize=True)
 
 
+# --------------------- TENTATIVA DE FUNÇÃO PARA REMOVER PRODUTOS ---------------------#
 def Limpar_Janela_Adicionar():
     for key in values:
         janela3[
@@ -208,55 +209,61 @@ def Limpar_Janela_Adicionar():
     return None
 
 
+# --------------------- USUARIOS PARA LOGIN ---------------------#
+
 usuariosLogin = ["1", "Davi", "Carlos", "Othavio", "lucas"]
+
+
+# ----------------------------- VIZUALIZAÇAO DAS JANELAS E EVENTOS --------------------------------------#
 
 janela1, janela2, janela3 = janela_login(), None, None
 
 while True:
     window, event, values = sg.read_all_windows()
-    # -------------------------------LOGIN------------------------------
+    # -------------------------------JANELA LOGIN------------------------------
     if window == janela1 and event == sg.WIN_CLOSED or event == "Sair":
         break
-    if window == janela1 and event == "-BOTAOCONTINUAR-":
+    elif window == janela1 and event == "-BOTAOCONTINUAR-":
         if values["-USUARIO-"] in usuariosLogin:
             janela1.hide()
             janela2 = janela_principal()
         else:
             sg.popup("Usuario invalido")
+
     # ------------------------------- JANELA PRINCIPAL --------------------------------
-    if window == janela2 and event == sg.WIN_CLOSED or event == "Sair":
+    elif window == janela2 and event == sg.WIN_CLOSED or event == "Sair":
         break
 
-    if window == janela2 and event == "Voltar":
+    elif window == janela2 and event == "Voltar":
         janela2.hide()
         janela1 = janela_login()
 
     # ------------------------JANELA ADICIONAR PRODUTOS --------------------------------
-    if window == janela2 and event == "-BOTAOADICIONAR-":
+    elif window == janela2 and event == "-BOTAOADICIONAR-":
         janela2.hide()
         janela3 = Adicionar_Produtos()
-    if window == janela3 and event == "Voltar":
+    elif window == janela3 and event == "Voltar":
         janela3.hide()
         janela2 = janela_principal()
-    if window == janela3 and event == sg.WIN_CLOSED:
+    elif window == janela3 and event == sg.WIN_CLOSED:
         break
-    if window == janela3 and event == "-LIMPAR-":
+    elif window == janela3 and event == "-LIMPAR-":
         for key in values:  # key é o nome do elemento
             janela3[key].update(" ")
 
-    if window == janela3 and event == "Data":
+    elif window == janela3 and event == "Data":
         date = sg.popup_get_date(close_when_chosen=True)
         if date:
             month, day, year = date
             janela3["-ADICIONADO-"].update(f"{day:0>2d}/{month:0>2d}/{year}")
-    if window == janela3 and event == "Vencimento":
+    elif window == janela3 and event == "Vencimento":
         date = sg.popup_get_date(close_when_chosen=True)
         if date:
             month, day, year = date
             janela3["-VENCE-"].update(f"{day:0>2d}/{month:0>2d}/{year}")
 
     # -------------------------- FUNÇAO QUE ADICIONA PRODUTOS --------------------------------
-    if window == janela3 and event == "-BOTAOADICIONARPRODUTO-":
+    elif window == janela3 and event == "-BOTAOADICIONARPRODUTO-":
         df = df.append(values, ignore_index=True)
         df.to_excel(EXCEL_FILE, index=False)
         sg.popup("Produto adicionado com sucesso")
