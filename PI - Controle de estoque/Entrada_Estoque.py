@@ -1,13 +1,11 @@
 from tkinter import Button, font
 from tkinter.font import BOLD
-from turtle import hideturtle
 import PySimpleGUI as sg
-from numpy import flexible
 import pandas as pd
 from datetime import datetime
 from openpyxl import Workbook
 import pathlib
-
+from openpyxl import load_workbook
 
 sg.theme("Reddit")
 
@@ -44,8 +42,33 @@ def janela_login():
     sg.theme("Reddit")
     layout = [
         [
-            [sg.Text("Usuario"), sg.Input(key="-USUARIO-", size=(20, 1))],
-            [sg.Button("Continuar", key="-BOTAOCONTINUAR-"), sg.Button("Sair")],
+            [sg.Image(filename="Logo_Inicial.png")],
+            [
+                sg.Push(),
+                sg.Text("Usuario", font=("Roboto", 10, BOLD)),
+                sg.Input(
+                    key="-USUARIO-",
+                    size=(22, 1),
+                ),
+                sg.Push(),
+            ],
+            [
+                sg.Push(),
+                sg.Button(
+                    "Continuar",
+                    key="-BOTAOCONTINUAR-",
+                    font=("Roboto", 10, BOLD),
+                    button_color=("white", "DarkBlue"),
+                    size=(10, 1),
+                ),
+                sg.Button(
+                    "Sair",
+                    button_color=("white", "DarkBlue"),
+                    font=("Roboto", 10, BOLD),
+                    size=(10, 1),
+                ),
+                sg.Push(),
+            ],
         ]
     ]
 
@@ -55,8 +78,8 @@ def janela_login():
 def janela_principal():
     sg.theme("Reddit")
     layout = [
-        [sg.Text("Bem vindo ao sistema de estoque", font=("Arial", 20))],
-        [sg.Text("Escolha uma opção abaixo:", font=("Arial", 15))],
+        [sg.Image(filename="Logo_Santa.png")],
+        [sg.Text("Bem vindo ao sistema de estoque:", font=("Roboto  ", 20))],
         [
             sg.Push(),
             sg.Button(
@@ -119,18 +142,16 @@ def Adicionar_Produtos():
             sg.Push(),
             sg.InputCombo(funcionarios, size=(20, 1), key="-FUNCIONARIO-"),
             sg.Push(),
-            sg.CalendarButton(
+            sg.Button(
                 "Data",
                 target="-ADICIONADO-",
-                format="%d/%m/%y",
                 font=("Roboto", 10, BOLD),
             ),
             sg.InputText(size=(10, 1), key="-ADICIONADO-"),
             sg.Push(),
-            sg.CalendarButton(
+            sg.Button(
                 "Vencimento",
                 target="-VENCE-",
-                format="%d/%m/%y",
                 font=("Roboto", 10, BOLD),
             ),
             sg.InputText(size=(8, 1), key="-VENCE-"),
@@ -151,7 +172,8 @@ def Adicionar_Produtos():
         ],
         [sg.VPush()],
         [
-            sg.Submit(
+            sg.Push(),
+            sg.Button(
                 "Adicionar",
                 size=(15, 1),
                 font=("Roboto", 12, BOLD),
@@ -161,20 +183,28 @@ def Adicionar_Produtos():
             sg.Button(
                 "Limpar", size=(15, 1), font=("Roboto", 12, BOLD), key="-LIMPAR-"
             ),
-            sg.Exit(
-                "Sair",
+            sg.Button(
+                "Voltar",
                 size=(15, 1),
                 font=("Roboto", 12, BOLD),
-                button_color=("white", "red"),
+                button_color=("white", "darkblue"),
             ),
+            sg.Push(),
         ],
     ]
     return sg.Window("Adicionar produtos", layout=layout, finalize=True)
 
 
-def clear_input():
+def Limpar_Janela_Adicionar():
     for key in values:
-        window[key].update(" ")
+        janela3[
+            "-ADICIONADO-",
+            "-ADICIONADO-",
+            "-CODIGO-",
+            "-QUANTIDADE-",
+            "-PRODUTO-",
+            "-PRECO-",
+        ].update(" ")
     return None
 
 
@@ -193,7 +223,7 @@ while True:
             janela2 = janela_principal()
         else:
             sg.popup("Usuario invalido")
-    # ------------------------------- JANAL PRINCIPAL --------------------------------
+    # ------------------------------- JANELA PRINCIPAL --------------------------------
     if window == janela2 and event == sg.WIN_CLOSED or event == "Sair":
         break
 
@@ -201,20 +231,36 @@ while True:
         janela2.hide()
         janela1 = janela_login()
 
-    # ------------------------------- ADICIONAR PRODUTOS --------------------------------
+    # ------------------------JANELA ADICIONAR PRODUTOS --------------------------------
     if window == janela2 and event == "-BOTAOADICIONAR-":
         janela2.hide()
         janela3 = Adicionar_Produtos()
-    if window == janela3 and event == sg.WIN_CLOSED or event == "Sair":
+    if window == janela3 and event == "Voltar":
+        janela3.hide()
+        janela2 = janela_principal()
+    if window == janela3 and event == sg.WIN_CLOSED:
         break
-    if event == janela3 and event == "-LIMPAR-":
-        clear_input()
-    if (
-        event == janela3 and event == "-BOTAOADICIONARPRODUTO-"
-    ):  # Adicionar produto no excel
+    if window == janela3 and event == "-LIMPAR-":
+        for key in values:  # key é o nome do elemento
+            janela3[key].update(" ")
+
+    if window == janela3 and event == "Data":
+        date = sg.popup_get_date(close_when_chosen=True)
+        if date:
+            month, day, year = date
+            janela3["-ADICIONADO-"].update(f"{day:0>2d}/{month:0>2d}/{year}")
+    if window == janela3 and event == "Vencimento":
+        date = sg.popup_get_date(close_when_chosen=True)
+        if date:
+            month, day, year = date
+            janela3["-VENCE-"].update(f"{day:0>2d}/{month:0>2d}/{year}")
+
+    # -------------------------- FUNÇAO QUE ADICIONA PRODUTOS --------------------------------
+    if window == janela3 and event == "-BOTAOADICIONARPRODUTO-":
         df = df.append(values, ignore_index=True)
         df.to_excel(EXCEL_FILE, index=False)
-        sg.popup("Item adicionado com sucesso!")
-        clear_input()
+        sg.popup("Produto adicionado com sucesso")
+        for key in values:
+            janela3[key].update(" ")
 
 window.close()
