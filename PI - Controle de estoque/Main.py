@@ -1,8 +1,6 @@
-from tkinter import Button, font
 from tkinter.font import BOLD
 import PySimpleGUI as sg
 import pandas as pd
-from datetime import datetime
 from openpyxl import Workbook
 import pathlib
 from openpyxl import load_workbook
@@ -195,79 +193,67 @@ def Adicionar_Produtos():
     return sg.Window("Adicionar produtos", layout=layout, finalize=True)
 
 
-# --------------------- TENTATIVA DE FUNÇÃO PARA REMOVER PRODUTOS ---------------------#
-def Limpar_Janela_Adicionar():
-    for key in values:
-        janela3[
-            "-ADICIONADO-",
-            "-ADICIONADO-",
-            "-CODIGO-",
-            "-QUANTIDADE-",
-            "-PRODUTO-",
-            "-PRECO-",
-        ].update(" ")
-    return None
-
-
-# --------------------- USUARIOS PARA LOGIN ---------------------#
+# ------------------------------------ USUARIOS PARA LOGIN --------------------------------#
 
 usuariosLogin = ["1", "Davi", "Carlos", "Othavio", "lucas"]
 
 
 # ----------------------------- VIZUALIZAÇAO DAS JANELAS E EVENTOS --------------------------------------#
 
-janela1, janela2, janela3 = janela_login(), None, None
+janelaLogin, janelaMenuPrincipal, janelaPosBotaoAdicionar = janela_login(), None, None
 
 while True:
     window, event, values = sg.read_all_windows()
     # -------------------------------JANELA LOGIN------------------------------
-    if window == janela1 and event == sg.WIN_CLOSED or event == "Sair":
+    if window == janelaLogin and event == sg.WIN_CLOSED or event == "Sair":
         break
-    elif window == janela1 and event == "-BOTAOCONTINUAR-":
+    elif window == janelaLogin and event == "-BOTAOCONTINUAR-":
         if values["-USUARIO-"] in usuariosLogin:
-            janela1.hide()
-            janela2 = janela_principal()
+            janelaLogin.hide()
+            janelaMenuPrincipal = janela_principal()
         else:
             sg.popup("Usuario invalido")
 
     # ------------------------------- JANELA PRINCIPAL --------------------------------
-    elif window == janela2 and event == sg.WIN_CLOSED or event == "Sair":
+    elif window == janelaMenuPrincipal and event == sg.WIN_CLOSED or event == "Sair":
         break
 
-    elif window == janela2 and event == "Voltar":
-        janela2.hide()
-        janela1 = janela_login()
+    elif window == janelaMenuPrincipal and event == "Voltar":
+        janelaMenuPrincipal.hide()
+        janelaLogin = janela_login()
 
     # ------------------------JANELA ADICIONAR PRODUTOS --------------------------------
-    elif window == janela2 and event == "-BOTAOADICIONAR-":
-        janela2.hide()
-        janela3 = Adicionar_Produtos()
-    elif window == janela3 and event == "Voltar":
-        janela3.hide()
-        janela2 = janela_principal()
-    elif window == janela3 and event == sg.WIN_CLOSED:
+    elif window == janelaMenuPrincipal and event == "-BOTAOADICIONAR-":
+        janelaMenuPrincipal.hide()
+        janelaPosBotaoAdicionar = Adicionar_Produtos()
+    elif window == janelaPosBotaoAdicionar and event == "Voltar":
+        janelaPosBotaoAdicionar.hide()
+        janelaMenuPrincipal = janela_principal()
+    elif window == janelaPosBotaoAdicionar and event == sg.WIN_CLOSED:
         break
-    elif window == janela3 and event == "-LIMPAR-":
+    elif window == janelaPosBotaoAdicionar and event == "-LIMPAR-":
         for key in values:  # key é o nome do elemento
-            janela3[key].update(" ")
+            janelaPosBotaoAdicionar[key].update(" ")
 
-    elif window == janela3 and event == "Data":
+    elif window == janelaPosBotaoAdicionar and event == "Data":
         date = sg.popup_get_date(close_when_chosen=True)
         if date:
             month, day, year = date
-            janela3["-ADICIONADO-"].update(f"{day:0>2d}/{month:0>2d}/{year}")
-    elif window == janela3 and event == "Vencimento":
+            janelaPosBotaoAdicionar["-ADICIONADO-"].update(
+                f"{day:0>2d}/{month:0>2d}/{year}"
+            )
+    elif window == janelaPosBotaoAdicionar and event == "Vencimento":
         date = sg.popup_get_date(close_when_chosen=True)
         if date:
             month, day, year = date
-            janela3["-VENCE-"].update(f"{day:0>2d}/{month:0>2d}/{year}")
+            janelaPosBotaoAdicionar["-VENCE-"].update(f"{day:0>2d}/{month:0>2d}/{year}")
 
     # -------------------------- FUNÇAO QUE ADICIONA PRODUTOS --------------------------------
-    elif window == janela3 and event == "-BOTAOADICIONARPRODUTO-":
+    elif window == janelaPosBotaoAdicionar and event == "-BOTAOADICIONARPRODUTO-":
         df = df.append(values, ignore_index=True)
         df.to_excel(EXCEL_FILE, index=False)
         sg.popup("Produto adicionado com sucesso")
         for key in values:
-            janela3[key].update(" ")
+            janelaPosBotaoAdicionar[key].update(" ")
 
 window.close()
