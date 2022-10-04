@@ -264,6 +264,9 @@ while True:
 
     # -------------------------- FUNÇAO QUE ADICIONA PRODUTOS --------------------------------
     elif window == janela3 and event == "-BOTAOADICIONARPRODUTO-":
+        while not "-CODIGO-".isnumeric():
+            sg.popup("Digite apenas numeros!")
+        else:
         df = df.append(values, ignore_index=True)
         df.to_excel(EXCEL_FILE, index=False)
         sg.popup("Produto adicionado com sucesso")
