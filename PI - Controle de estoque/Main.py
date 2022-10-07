@@ -249,14 +249,15 @@ while True:
             janelaPosBotaoAdicionar["-VENCE-"].update(f"{day:0>2d}/{month:0>2d}/{year}")
 
     # -------------------------- FUNÇAO QUE ADICIONA PRODUTOS --------------------------------
-    elif window == janela3 and event == "-BOTAOADICIONARPRODUTO-":
-        while not "-CODIGO-".isnumeric():
-            sg.popup("Digite apenas numeros!")
+    elif window == janelaPosBotaoAdicionar and event == "-BOTAOADICIONARPRODUTO-":
+        while not values["-CODIGO-"].isnumeric():
+            sg.popup("Em codigo de barras, digite apenas numeros!")
+            break
         else:
-        df = df.append(values, ignore_index=True)
-        df.to_excel(EXCEL_FILE, index=False)
-        sg.popup("Produto adicionado com sucesso")
-        for key in values:
-            janelaPosBotaoAdicionar[key].update(" ")
+            df = df.append(values, ignore_index=True)
+            df.to_excel(EXCEL_FILE, index=False)
+            sg.popup("Produto adicionado com sucesso")
+            for key in values:
+                janelaPosBotaoAdicionar[key].update(" ")
 
 window.close()
