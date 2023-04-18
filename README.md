@@ -1,4 +1,4 @@
-# Controle de Estoque
+<h1 align="center"> Controle de Estoque </h1>
 
 <p align="center">
   <img src="imgRM/mainW.png" alt="img_Principal" width="450px" height="300px">
@@ -52,10 +52,3 @@ Vocẽ precisa ter Python instalado na sua maquina:
    pip install Penpyxl
    pip install Pandas
    ```
-   
- ## Imagens do Programa
- 
-
- 
-
-
