@@ -1,4 +1,10 @@
 # Controle de Estoque
+
+<p align="center">
+  <img src="imgRM/mainW.png" alt="img_Principal" width="450px" height="300px">
+</p>
+
+  
 Projeto integrador realizado na UNISC em Santa Cruz do Sul.
 
 Sistema para cadastro de itens utilizando Excel como banco de dados local facilitando a pandas em pequenos mercados.
@@ -9,6 +15,7 @@ Como estava usando esse projeto para aprendizado, fiz uso dos seguintes framewor
 * Openpyxl
 * Penpyxl
 * Pandas
+
 
 ## Pré-requisito
 
@@ -47,7 +54,7 @@ Vocẽ precisa ter Python instalado na sua maquina:
    ```
    
  ## Imagens do Programa
- ![Alt Text](Logo_Santa.png)
+ 
 
  
 
